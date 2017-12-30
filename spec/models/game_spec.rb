@@ -12,11 +12,11 @@ require 'support/my_spec_helper'
 # ключевая логика игры и значит работы сайта.
 RSpec.describe Game, type: :model do
   # Пользователь для создания игр
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   # Игра с прописанными игровыми вопросами
   let(:game_w_questions) do
-    FactoryGirl.create(:game_with_questions, user: user)
+    FactoryBot.create(:game_with_questions, user: user)
   end
 
   # Группа тестов на работу фабрики создания новых игр
