@@ -5,7 +5,7 @@
 # См. другие примеры:
 #
 # http://www.rubydoc.info/gems/factory_girl/file/GETTING_STARTED.md
-FactoryGirl.define do
+FactoryBot.define do
   factory :game_question do
     # Всегда одинаковое распределение ответов, в тестах удобнее детерминизм.
     a 4

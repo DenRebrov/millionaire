@@ -5,7 +5,7 @@
 # См. другие примеры на
 #
 # http://www.rubydoc.info/gems/factory_girl/file/GETTING_STARTED.md
-FactoryGirl.define do
+FactoryBot.define do
   factory :question do
     # Последовательность уникальных текстов вопроса
     sequence(:text) { |n| "В каком году была космичесая одиссея #{n}?" }
