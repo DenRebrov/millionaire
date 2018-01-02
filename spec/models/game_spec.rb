@@ -72,7 +72,6 @@ RSpec.describe Game, type: :model do
       expect(game_w_questions.finished?).to be_falsey
     end
 
-
     it 'correct .take_money!' do
       q = game_w_questions.current_game_question
       game_w_questions.answer_current_question!(q.correct_answer_key)
@@ -85,6 +84,22 @@ RSpec.describe Game, type: :model do
       expect(game_w_questions.status).to eq :money
       expect(game_w_questions.finished?).to be_truthy
       expect(user.balance).to eq prize
+    end
+
+    it 'correct .previous_level' do
+      game_w_questions.current_level = 2
+      expect(game_w_questions.previous_level).to eq(1)
+    end
+
+    it 'correct .current_game_question' do
+      q = game_w_questions.current_game_question
+      expect(game_w_questions.current_game_question).to eq(q)
+    end
+
+
+    # Метод current_game_question возвращает текущий, еще неотвеченный вопрос игры
+    def current_game_question
+      game_questions.detect { |q| q.question.level == current_level }
     end
   end
 
