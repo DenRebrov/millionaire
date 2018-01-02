@@ -37,5 +37,8 @@ RSpec.describe GameQuestion, type: :model do
       expect(game_question.level).to eq(game_question.question.level)
     end
 
+    it 'test .correct_answer_key' do
+      expect(game_question.correct_answer_key).to eq('b')
+    end
   end
 end
