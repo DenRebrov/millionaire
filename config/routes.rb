@@ -10,4 +10,6 @@ Rails.application.routes.draw do
     put 'answer', on: :member # доп. метод ресурса - ответ на текущий вопро
     put 'take_money', on: :member # доп. метод ресурса - игрок берет деньги
   end
+
+  resource :questions, only: [:new, :create]
 end
