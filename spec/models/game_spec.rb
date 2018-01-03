@@ -95,15 +95,36 @@ RSpec.describe Game, type: :model do
       q = game_w_questions.current_game_question
       expect(game_w_questions.current_game_question).to eq(q)
     end
+  end
 
+  context 'test .answer_current_question!' do
 
-    # Метод current_game_question возвращает текущий, еще неотвеченный вопрос игры
-    def current_game_question
-      game_questions.detect { |q| q.question.level == current_level }
+    it 'correct answer' do
+      q = game_w_questions.current_game_question
+      expect(true).to eq(game_w_questions.answer_current_question!(q.correct_answer_key))
+    end
+
+    it 'mistake answer' do
+      q = game_w_questions.current_game_question
+      expect(false).to eq(game_w_questions.answer_current_question!(!q.correct_answer_key))
+    end
+
+    it 'finished' do
+      q = game_w_questions.current_game_question
+      game_w_questions.current_level = Question::QUESTION_LEVELS.max
+      game_w_questions.answer_current_question!(q.correct_answer_key)
+      expect(game_w_questions.finished?).to be_truthy
+    end
+
+    it 'time over' do
+      q = game_w_questions.current_game_question
+      game_w_questions.answer_current_question!(q.correct_answer_key)
+      game_w_questions.created_at = 1.hour.ago
+      expect(game_w_questions.time_out!).to eq(true)
     end
   end
 
-  context 'correct .status' do
+  context 'test .status' do
 
     before(:each) do
       game_w_questions.finished_at = Time.now
