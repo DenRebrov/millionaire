@@ -93,7 +93,7 @@ RSpec.describe Game, type: :model do
 
     it 'correct .current_game_question' do
       q = game_w_questions.current_game_question
-      expect(game_w_questions.current_game_question).to eq(q)
+      expect(q.level).to eq(game_w_questions.current_level)
     end
   end
 
