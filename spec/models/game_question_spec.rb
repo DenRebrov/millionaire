@@ -24,21 +24,33 @@ RSpec.describe GameQuestion, type: :model do
       )
     end
 
-    it 'correct .answer_correct?' do
-      # Именно под буквой b в тесте мы спрятали указатель на верный ответ
-      expect(game_question.answer_correct?('b')).to be_truthy
+    describe 'test method .answer_correct?' do
+
+      it 'variant "b" must be correct' do
+        # Именно под буквой b в тесте мы спрятали указатель на верный ответ
+        expect(game_question.answer_correct?('b')).to be_truthy
+      end
     end
 
-    it 'correct .text' do
-      expect(game_question.text).to eq(game_question.question.text)
+    describe 'test method .text' do
+
+      it 'the value of the "text" field must be equal to the value of the same field in the related "question"' do
+        expect(game_question.text).to eq(game_question.question.text)
+      end
     end
 
-    it 'correct .level' do
-      expect(game_question.level).to eq(game_question.question.level)
+    describe 'test method .level' do
+
+      it 'the value of the "level" field must be equal to the value of the same field in the related "question"' do
+        expect(game_question.level).to eq(game_question.question.level)
+      end
     end
 
-    it 'test .correct_answer_key' do
-      expect(game_question.correct_answer_key).to eq('b')
+    describe 'test method .correct_answer_key' do
+
+      it 'the correct answer is equal to variant "b"' do
+        expect(game_question.correct_answer_key).to eq('b')
+      end
     end
   end
 end

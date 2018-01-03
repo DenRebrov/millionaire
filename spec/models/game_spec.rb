@@ -20,7 +20,7 @@ RSpec.describe Game, type: :model do
   end
 
   # Группа тестов на работу фабрики создания новых игр
-  context 'Game Factory' do
+  describe 'Game Factory' do
     it 'Game.create_game! new correct game' do
       # Генерим 60 вопросов с 4х запасом по полю level, чтобы проверить работу
       # RANDOM при создании игры.
@@ -97,30 +97,42 @@ RSpec.describe Game, type: :model do
     end
   end
 
-  context 'test .answer_current_question!' do
+  context 'test method .answer_current_question!' do
 
-    it 'correct answer' do
-      q = game_w_questions.current_game_question
-      expect(true).to eq(game_w_questions.answer_current_question!(q.correct_answer_key))
+    describe 'when the answer is correct' do
+
+      it 'the "answer_current_question" method must return "true" if the answer is correct' do
+        q = game_w_questions.current_game_question
+        expect(true).to eq(game_w_questions.answer_current_question!(q.correct_answer_key))
+      end
     end
 
-    it 'mistake answer' do
-      q = game_w_questions.current_game_question
-      expect(false).to eq(game_w_questions.answer_current_question!(!q.correct_answer_key))
+    describe 'when the answer is wrong' do
+
+      it 'the "answer_current_question" method must return "false" if the answer is wrong' do
+        q = game_w_questions.current_game_question
+        expect(false).to eq(game_w_questions.answer_current_question!(!q.correct_answer_key))
+      end
     end
 
-    it 'finished' do
-      q = game_w_questions.current_game_question
-      game_w_questions.current_level = Question::QUESTION_LEVELS.max
-      game_w_questions.answer_current_question!(q.correct_answer_key)
-      expect(game_w_questions.finished?).to be_truthy
+    describe 'when the last answer' do
+
+      it 'the "finished?" method must return "true" if the question last' do
+        q = game_w_questions.current_game_question
+        game_w_questions.current_level = Question::QUESTION_LEVELS.max
+        game_w_questions.answer_current_question!(q.correct_answer_key)
+        expect(game_w_questions.finished?).to be_truthy
+      end
     end
 
-    it 'time over' do
-      q = game_w_questions.current_game_question
-      game_w_questions.answer_current_question!(q.correct_answer_key)
-      game_w_questions.created_at = 1.hour.ago
-      expect(game_w_questions.time_out!).to eq(true)
+    describe 'when the answer is given after the expiration of time' do
+
+      it 'the "time_out!" method must return "true" if the answer is given after the expiration of time' do
+        q = game_w_questions.current_game_question
+        game_w_questions.answer_current_question!(q.correct_answer_key)
+        game_w_questions.created_at = 1.hour.ago
+        expect(game_w_questions.time_out!).to eq(true)
+      end
     end
   end
 
