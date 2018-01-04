@@ -138,6 +138,30 @@ RSpec.describe GamesController, type: :controller do
       expect(response).to redirect_to(game_path(game_w_questions))
       expect(flash[:alert]).to be
     end
-
   end
+
+  context 'Checking game situations' do
+
+    describe 'a test that checks for an incorrect player response' do
+
+      it 'the game must be over;
+          there must be a flash warning;
+          user must be redirected to the user"s page;
+          the prize must be 0' do
+
+        sign_in user
+        put :answer, id: game_w_questions.id, letter: !game_w_questions.current_game_question.correct_answer_key
+        game_w_questions.update_attribute(:current_level, 1)
+
+        game = assigns(:game)
+        prize = game_w_questions.prize
+
+        expect(game.finished?).to be_truthy
+        expect(flash[:alert]).to be
+        expect(response).to redirect_to(user_path(user))
+        expect(prize).to eq(0)
+      end
+    end
+  end
+
 end
