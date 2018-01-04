@@ -13,7 +13,7 @@ RSpec.describe GameQuestion, type: :model do
   end
 
   # Группа тестов на игровое состояние объекта вопроса
-  context 'game status' do
+  describe 'game status' do
     # Тест на правильную генерацию хэша с вариантами
     it 'correct .variants' do
       expect(game_question.variants).to eq(
@@ -24,33 +24,59 @@ RSpec.describe GameQuestion, type: :model do
       )
     end
 
-    describe 'test method .answer_correct?' do
+    describe '.answer_correct?' do
 
-      it 'variant "b" must be correct' do
-        # Именно под буквой b в тесте мы спрятали указатель на верный ответ
-        expect(game_question.answer_correct?('b')).to be_truthy
+      context 'when correct answer provided' do
+        let (:provided_answer) { "b" }
+
+        it 'returns true' do
+          expect(game_question.answer_correct?(provided_answer)).to be_truthy
+        end
+      end
+
+      context 'when incorrect answer provided' do
+        let (:provided_answer) { "a" }
+
+        it 'returns false' do
+          expect(game_question.answer_correct?(provided_answer)).to be_falsey
+        end
       end
     end
 
-    describe 'test method .text' do
-
-      it 'the value of the "text" field must be equal to the value of the same field in the related "question"' do
+    describe '.text' do
+      it 'is equal to the value of the same field in the related "question"' do
         expect(game_question.text).to eq(game_question.question.text)
       end
     end
 
-    describe 'test method .level' do
-
-      it 'the value of the "level" field must be equal to the value of the same field in the related "question"' do
+    describe '.level' do
+      it 'is equal to the value of the same field in the related "question"' do
         expect(game_question.level).to eq(game_question.question.level)
       end
     end
 
-    describe 'test method .correct_answer_key' do
+    describe '.correct_answer_key' do
+      let (:provided_answer) { "b" }
 
-      it 'the correct answer is equal to variant "b"' do
-        expect(game_question.correct_answer_key).to eq('b')
+      it 'is equal to provided_answer' do
+        expect(game_question.correct_answer_key).to eq(provided_answer)
       end
     end
   end
+
+  context 'user helpers' do
+
+    it 'correct audience_help' do
+      expect(game_question.help_hash).not_to include(:audience_help)
+
+      game_question.add_audience_help
+
+      expect(game_question.help_hash).to include(:audience_help)
+
+      ah = game_question.help_hash[:audience_help]
+      expect(ah.keys).to contain_exactly('a', 'b', 'c', 'd')
+    end
+  end
+
+
 end
