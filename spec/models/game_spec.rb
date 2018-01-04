@@ -103,7 +103,10 @@ RSpec.describe Game, type: :model do
 
       it 'the "answer_current_question" method must return "true" if the answer is correct' do
         q = game_w_questions.current_game_question
-        expect(true).to eq(game_w_questions.answer_current_question!(q.correct_answer_key))
+
+        expect(game_w_questions.answer_current_question!(q.correct_answer_key)).to be_truthy
+        expect(game_w_questions.finished?).to be_falsey
+        expect(game_w_questions.status).to eq(:in_progress)
       end
     end
 
@@ -111,17 +114,24 @@ RSpec.describe Game, type: :model do
 
       it 'the "answer_current_question" method must return "false" if the answer is wrong' do
         q = game_w_questions.current_game_question
-        expect(false).to eq(game_w_questions.answer_current_question!(!q.correct_answer_key))
+
+        expect(game_w_questions.answer_current_question!(!q.correct_answer_key)).to be_falsey
+        expect(game_w_questions.finished?).to be_truthy
+        expect(game_w_questions.status).to eq(:fail)
       end
     end
 
     describe 'when the last answer' do
 
-      it 'the "finished?" method must return "true" if the question last' do
+      it 'the "finished?" method must return "true" if the question last;
+          prize must be equal to 1000000' do
         q = game_w_questions.current_game_question
         game_w_questions.current_level = Question::QUESTION_LEVELS.max
         game_w_questions.answer_current_question!(q.correct_answer_key)
+
+        expect(game_w_questions.prize).to  eq(1000000)
         expect(game_w_questions.finished?).to be_truthy
+        expect(game_w_questions.status).to eq(:won)
       end
     end
 
@@ -131,7 +141,10 @@ RSpec.describe Game, type: :model do
         q = game_w_questions.current_game_question
         game_w_questions.answer_current_question!(q.correct_answer_key)
         game_w_questions.created_at = 1.hour.ago
+
         expect(game_w_questions.time_out!).to eq(true)
+        expect(game_w_questions.finished?).to be_truthy
+        expect(game_w_questions.status).to eq(:timeout)
       end
     end
   end
