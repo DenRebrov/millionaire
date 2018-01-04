@@ -181,9 +181,6 @@ class Game < ActiveRecord::Base
     false
   end
 
-
-
-
   # Результат игры status, возвращает, одно из:
   #
   # :fail — игра проиграна из-за неверного вопроса
