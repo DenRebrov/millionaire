@@ -19,29 +19,73 @@ RSpec.describe GamesController, type: :controller do
 
   # группа тестов для незалогиненного юзера (Анонимус)
   context 'Anonim user' do
-    # из экшена show анона посылаем
 
     describe 'an unregistered visitor can not cause the action of a #show at GamesController' do
+      before(:each) { get :show, id: game_w_questions.id }
 
-      it 'the response status should not be 200;
-          must be a flash alert;
-          redirect path must be a "new_user_session_path"' do
-        # вызываем экшен
-        get :show, id: game_w_questions.id
-        # проверяем ответ
-        expect(response.status).not_to eq(200) # статус не 200 ОК
-        expect(response).to redirect_to(new_user_session_path) # devise должен отправить на логин
-        expect(flash[:alert]).to be # во flash должен быть прописана ошибка
+      it 'the response status should not be 200' do
+        expect(response.status).not_to eq(200)
+      end
+      it 'redirect path must be a "new_user_session_path' do
+        expect(response).to redirect_to(new_user_session_path)
+      end
+      it 'must be a flash alert' do
+        expect(flash[:alert]).to be
       end
     end
 
     describe 'an unregistered visitor can not cause the action of a #create at GamesController' do
+      before(:each) { post :create, id: game_w_questions.id }
 
-      it 'the response status should not be 200;
-          must be a flash alert' do
-        post :create, id: game_w_questions.id
-
+      it 'the response status should not be 200' do
         expect(response.status).not_to eq(200)
+      end
+      it 'redirect path must be a "new_user_session_path' do
+        expect(response).to redirect_to(new_user_session_path)
+      end
+      it 'must be a flash alert' do
+        expect(flash[:alert]).to be
+      end
+    end
+
+    describe 'an unregistered visitor can not cause the action of a #answer at GamesController' do
+      before(:each) { put :answer, id: game_w_questions.id }
+
+      it 'the response status should not be 200' do
+        expect(response.status).not_to eq(200)
+      end
+      it 'redirect path must be a "new_user_session_path' do
+        expect(response).to redirect_to(new_user_session_path)
+      end
+      it 'must be a flash alert' do
+        expect(flash[:alert]).to be
+      end
+    end
+
+    describe 'an unregistered visitor can not cause the action of a #take_money at GamesController' do
+      before(:each) { put :take_money, id: game_w_questions.id }
+
+      it 'the response status should not be 200' do
+        expect(response.status).not_to eq(200)
+      end
+      it 'redirect path must be a "new_user_session_path' do
+        expect(response).to redirect_to(new_user_session_path)
+      end
+      it 'must be a flash alert' do
+        expect(flash[:alert]).to be
+      end
+    end
+
+    describe 'an unregistered visitor can not cause the action of a #help at GamesController' do
+      before(:each) { put :help, id: game_w_questions.id }
+
+      it 'the response status should not be 200' do
+        expect(response.status).not_to eq(200)
+      end
+      it 'redirect path must be a "new_user_session_path' do
+        expect(response).to redirect_to(new_user_session_path)
+      end
+      it 'must be a flash alert' do
         expect(flash[:alert]).to be
       end
     end
