@@ -164,7 +164,7 @@ RSpec.describe GamesController, type: :controller do
           user moves to the game page;
           the hash size with the prompt is 2;
           hash hints contains the correct answer' do
-        
+
         sign_in user
         expect(game_w_questions.current_game_question.help_hash[:fifty_fifty]).not_to be
         put :help, id: game_w_questions.id, help_type: :fifty_fifty
@@ -175,7 +175,7 @@ RSpec.describe GamesController, type: :controller do
         expect(game.current_game_question.help_hash[:fifty_fifty]).to be
         expect(response).to redirect_to(game_path(game))
         expect(game.current_game_question.help_hash[:fifty_fifty].size).to eq(2)
-        expect(game.current_game_question.help_hash[:fifty_fifty]).to include(game_w_questions.current_game_question.correct_answer_key)
+        expect(game.current_game_question.help_hash[:fifty_fifty]).to include(game.current_game_question.correct_answer_key)
       end
     end
 
@@ -184,23 +184,26 @@ RSpec.describe GamesController, type: :controller do
   context 'Checking game situations' do
 
     describe 'a test that checks for an incorrect player response' do
-
-      it 'the game must be over;
-          there must be a flash warning;
-          user must be redirected to the user"s page;
-          the prize must be 0' do
-
+      before(:each) {
         sign_in user
         put :answer, id: game_w_questions.id, letter: !game_w_questions.current_game_question.correct_answer_key
         game_w_questions.update_attribute(:current_level, 1)
+        }
 
-        game = assigns(:game)
-        prize = game_w_questions.prize
-
-        expect(game.finished?).to be_truthy
+      it 'the game must be over' do
+        expect(assigns(:game).finished?).to be_truthy
+      end
+      it 'there must be a flash warning' do
         expect(flash[:alert]).to be
+      end
+      it 'user must be redirected to the user"s page' do
         expect(response).to redirect_to(user_path(user))
-        expect(prize).to eq(0)
+      end
+      it 'the prize must be 0' do
+        expect(game_w_questions.prize).to eq(0)
+      end
+      it 'the response status should not be 200' do
+        expect(response.status).not_to eq(200)
       end
     end
   end
