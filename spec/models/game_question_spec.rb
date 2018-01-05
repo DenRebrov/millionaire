@@ -113,17 +113,51 @@ RSpec.describe GameQuestion, type: :model do
     end
 
     describe '.friend_call' do
-      it '' do
-        expect(game_question.help_hash).not_to include(:friend_call)
+
+      before (:each) {
         game_question.add_friend_call
+      }
 
+      it 'is contained in the help_hash' do
         expect(game_question.help_hash).to include(:friend_call)
-        fc = game_question.help_hash[:friend_call]
+      end
+      it 'the output class must be a String' do
+        expect(game_question.help_hash[:friend_call].class).to eq(String)
+      end
 
-        expect(fc.size).to eq 1
+      describe '80% probability of getting the correct key' do
+        it 'is test #1' do
+          expect(game_question.help_hash[:friend_call]).to include(game_question.correct_answer_key.upcase)
+        end
+        it 'is test #2' do
+          expect(game_question.help_hash[:friend_call]).to include(game_question.correct_answer_key.upcase)
+        end
+        it 'is test #3' do
+          expect(game_question.help_hash[:friend_call]).to include(game_question.correct_answer_key.upcase)
+        end
+        it 'is test #4' do
+          expect(game_question.help_hash[:friend_call]).to include(game_question.correct_answer_key.upcase)
+        end
+        it 'is test #5' do
+          expect(game_question.help_hash[:friend_call]).to include(game_question.correct_answer_key.upcase)
+        end
+        it 'is test #6' do
+          expect(game_question.help_hash[:friend_call]).to include(game_question.correct_answer_key.upcase)
+        end
+        it 'is test #7' do
+          expect(game_question.help_hash[:friend_call]).to include(game_question.correct_answer_key.upcase)
+        end
+        it 'is test #8' do
+          expect(game_question.help_hash[:friend_call]).to include(game_question.correct_answer_key.upcase)
+        end
+        it 'is test #9' do
+          expect(game_question.help_hash[:friend_call]).to include(game_question.correct_answer_key.upcase)
+        end
+        it 'is test #10' do
+          expect(game_question.help_hash[:friend_call]).to include(game_question.correct_answer_key.upcase)
+        end
       end
     end
-
   end
 
   # help_hash у нас имеет такой формат:
@@ -133,6 +167,4 @@ RSpec.describe GameQuestion, type: :model do
   #   friend_call: 'Василий Петрович считает, что правильный ответ A'
   # }
   #
-
-
 end

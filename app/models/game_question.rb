@@ -1,5 +1,5 @@
 
-#require 'game_help_generator'
+require 'game_help_generator'
 
 # Игровой вопрос — модель, которая связывает игру и вопрос. При создании новой
 # игры формируется массив из 15 игровых вопросов для конкретной игры.
@@ -107,7 +107,7 @@ class GameQuestion < ActiveRecord::Base
   def add_friend_call
     # массив ключей
     keys_to_use = keys_to_use_in_help
-    self.help_hash[:friend_call] = {'a' => rand(100)} #GameHelpGenerator.friend_call(keys_to_use, correct_answer_key)
+    self.help_hash[:friend_call] = GameHelpGenerator.friend_call(keys_to_use, correct_answer_key)
     save
   end
 
