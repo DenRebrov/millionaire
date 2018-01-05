@@ -158,24 +158,35 @@ RSpec.describe GamesController, type: :controller do
     end
 
     describe '.fifty_fifty' do
-      it 'is clue was not spent;
-          the game must go on;
-          the prompt should be;
-          user moves to the game page;
-          the hash size with the prompt is 2;
-          hash hints contains the correct answer' do
-
+      before(:each) {
         sign_in user
         expect(game_w_questions.current_game_question.help_hash[:fifty_fifty]).not_to be
         put :help, id: game_w_questions.id, help_type: :fifty_fifty
-        game = assigns(:game)
+      }
 
+      it 'is clue was not spent' do
         expect(game_w_questions.fifty_fifty_used).to be_falsey
-        expect(game.finished?).to be_falsey
-        expect(game.current_game_question.help_hash[:fifty_fifty]).to be
-        expect(response).to redirect_to(game_path(game))
-        expect(game.current_game_question.help_hash[:fifty_fifty].size).to eq(2)
-        expect(game.current_game_question.help_hash[:fifty_fifty]).to include(game.current_game_question.correct_answer_key)
+      end
+      it 'the game must go on' do
+        expect(assigns(:game).finished?).to be_falsey
+      end
+      it 'the prompt should be' do
+        expect(assigns(:game).current_game_question.help_hash[:fifty_fifty]).to be
+      end
+      it 'user moves to the game page' do
+        expect(response).to redirect_to(game_path)
+      end
+      it 'the hash size with the prompt is 2' do
+        expect(assigns(:game).current_game_question.help_hash[:fifty_fifty].size).to eq(2)
+      end
+      it 'hash hints contains the correct answer' do
+        expect(assigns(:game).current_game_question.help_hash[:fifty_fifty]).to include(assigns(:game).current_game_question.correct_answer_key)
+      end
+      it 'is flash object should not be alert' do
+        expect(flash[:alert]).not_to be
+      end
+      it 'the response status should not be 200' do
+        expect(response.status).not_to eq(200)
       end
     end
 
@@ -188,7 +199,7 @@ RSpec.describe GamesController, type: :controller do
         sign_in user
         put :answer, id: game_w_questions.id, letter: !game_w_questions.current_game_question.correct_answer_key
         game_w_questions.update_attribute(:current_level, 1)
-        }
+      }
 
       it 'the game must be over' do
         expect(assigns(:game).finished?).to be_truthy
