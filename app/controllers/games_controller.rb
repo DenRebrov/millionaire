@@ -44,26 +44,34 @@ class GamesController < ApplicationController
   # Действие answer принимает ответ на вопрос, единственный обязательный
   # параметр — params[:letter] — буква, которую выбрал игрок.
   def answer
-    # Выясняем у игры, правильно ли оветили
+    # выясняем, правильно ли оветили
     @answer_is_correct = @game.answer_current_question!(params[:letter])
     @game_question = @game.current_game_question
 
     unless @answer_is_correct
-      # Если ответили неправильно, отправляем юзера на профиль с сообщением
       flash[:alert] = I18n.t(
-        'controllers.games.bad_answer',
-        answer: @game_question.correct_answer,
-        prize: view_context.number_to_currency(@game.prize)
+          'controllers.games.bad_answer',
+          answer: @game_question.correct_answer,
+          prize: view_context.number_to_currency(@game.prize)
       )
     end
 
-    if @game.finished?
-      # Если игра закончилась, отправялем юзера на свой профиль
-      redirect_to user_path(current_user)
-    else
-      # Иначе, обратно на экран игры
-      redirect_to game_path(@game)
+    # Выбираем поведение в зависимости от формата запроса
+    respond_to do |format|
+      # Если это html-запрос, по-старинке редиректим пользователя в зависимости от ситуации
+      format.html do
+        if @answer_is_correct && !@game.finished?
+          redirect_to game_path(@game)
+        else
+          redirect_to user_path(current_user)
+        end
+      end
+
+      # Если это js-запрос, то ничего не делаем и контролл попытается отрисовать шаблон
+      # <controller>/<action>.<format>.erb (в нашем случае games/answer.js.erb)
+      format.js {}
     end
+
   end
 
   # Действие take_money вызывается из шаблона, когда пользователь берет кнопку
